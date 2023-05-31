@@ -1,15 +1,14 @@
 import 'package:flutter/material.dart';
-import 'package:scrap_market/ui/seller/sellscrappage.dart';
-import 'package:scrap_market/ui/seller/trackmyscrap.dart';
+import 'package:scrap_market/ui/buyer/buyscrappage.dart';
 
-class HomePage extends StatelessWidget {
-  const HomePage({super.key});
+class BuyerHomePage extends StatelessWidget {
+  const BuyerHomePage({super.key});
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Scrap Sell & Buy'),
+        title: const Text('Scrap  Buy'),
       ),
       body: SingleChildScrollView(
         child: Padding(
@@ -18,7 +17,7 @@ class HomePage extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
               const Text(
-                'Welcome to Scrap Sell & Buy',
+                'Welcome to Scrap Buy',
                 style: TextStyle(
                   fontSize: 24,
                   fontWeight: FontWeight.bold,
@@ -26,28 +25,28 @@ class HomePage extends StatelessWidget {
                 textAlign: TextAlign.center,
               ),
               const SizedBox(height: 20.0),
-              ElevatedButton(
-                onPressed: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => const SellScrapPage(),
-                    ),
-                  );
-                },
-                child: const Text('Sell Scrap'),
-              ),
+              // ElevatedButton(
+              //   onPressed: () {
+              //     Navigator.push(
+              //       context,
+              //       MaterialPageRoute(
+              //         builder: (context) => const SellScrapPage(),
+              //       ),
+              //     );
+              //   },
+              //   child: const Text('Sell Scrap'),
+              // ),
               const SizedBox(height: 10.0),
               ElevatedButton(
                 onPressed: () {
                   Navigator.push(
                     context,
                     MaterialPageRoute(
-                      builder: (context) => ScrapTrackerPage(),
+                      builder: (context) => const BuyScrapPage(),
                     ),
                   );
                 },
-                child: const Text('Track my Scrap'),
+                child: const Text('Buy Scrap'),
               ),
               const Padding(
                 padding: EdgeInsets.all(20.0),

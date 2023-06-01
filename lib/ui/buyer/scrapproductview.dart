@@ -126,7 +126,7 @@ class _ProductUploadPageState extends State<ProductUploadPage> {
 }
 
 void main() {
-  runApp(MaterialApp(
+  runApp(const MaterialApp(
     home: ProductUploadPage(),
   ));
 }

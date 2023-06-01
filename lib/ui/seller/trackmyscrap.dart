@@ -10,10 +10,10 @@ class ScrapTrackerPage extends StatefulWidget {
 
 class _ScrapTrackerPageState extends State<ScrapTrackerPage> {
   List<ScrapProduct> scrapProducts = [
-    ScrapProduct('Product 1', false),
-    ScrapProduct('Product 2', true),
-    ScrapProduct('Product 3', true),
-    ScrapProduct('Product 4', false),
+    ScrapProduct('29/05/2023', false),
+    ScrapProduct('28/05/2023', true),
+    ScrapProduct('27/05/2023', true),
+    ScrapProduct('31/05/2023', false),
   ];
 
   @override

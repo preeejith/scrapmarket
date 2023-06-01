@@ -21,18 +21,58 @@ class _OrderTrackerPageState extends State<OrderTrackerPage> {
       appBar: AppBar(
         title: const Text('Order Tracker'),
       ),
-      body: ListView.builder(
-        itemCount: orders.length,
-        itemBuilder: (context, index) {
-          return ListTile(
-            title: Text(orders[index].name),
-            leading: Icon(
-              _getStatusIcon(orders[index].status),
-              color: _getStatusColor(orders[index].status),
+      bottomNavigationBar: SizedBox(
+        height: 100,
+        child: Center(
+          child: ElevatedButton(
+            onPressed: () {
+              // Implement buy logic here
+            },
+            child: const Text('Accept Request'),
+          ),
+        ),
+      ),
+      body: SingleChildScrollView(
+        child: Column(
+          children: [
+            SizedBox(
+              height: MediaQuery.of(context).size.height / 1.8,
+              child: ListView.builder(
+                itemCount: orders.length,
+                itemBuilder: (context, index) {
+                  return ListTile(
+                    title: Text(orders[index].name),
+                    leading: Icon(
+                      _getStatusIcon(orders[index].status),
+                      color: _getStatusColor(orders[index].status),
+                    ),
+                    subtitle: Text(_getStatusText(orders[index].status)),
+                  );
+                },
+              ),
             ),
-            subtitle: Text(_getStatusText(orders[index].status)),
-          );
-        },
+            const SizedBox(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text("Buyer Info:"),
+                  Text("Tharun Varkey"),
+                  Text("Amount Offer"),
+                  Text("₹ 555"),
+                ],
+              ),
+            ),
+            // const SizedBox(
+            //   child: Column(
+            //     children: [
+            //       Text("Amount Offer"),
+            //       Text("555"),
+            //     ],
+            //   ),
+            // ),
+          ],
+        ),
       ),
     );
   }

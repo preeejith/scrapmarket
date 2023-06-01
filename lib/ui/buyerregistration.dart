@@ -20,8 +20,8 @@ class _BuyerRegistrationState extends State<BuyerRegistration> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Buyer Registration'),
-      ),
+          // title: const Text('Buyer Registration'),
+          ),
       body: Padding(
         padding: const EdgeInsets.all(20.0),
         child: SingleChildScrollView(

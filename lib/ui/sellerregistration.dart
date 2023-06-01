@@ -12,8 +12,8 @@ class _SelleRegistrationState extends State<SelleRegistration> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Registration Seller'),
-      ),
+          // title: const Text('Registration Seller'),
+          ),
       body: Padding(
         padding: const EdgeInsets.all(20.0),
         child: SingleChildScrollView(

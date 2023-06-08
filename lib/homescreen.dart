@@ -1,15 +1,49 @@
 import 'package:flutter/material.dart';
+import 'package:scrap_market/loginscreen.dart';
+import 'package:scrap_market/prefmanager/prefmanager.dart';
 import 'package:scrap_market/ui/seller/sellscrappage.dart';
 import 'package:scrap_market/ui/seller/trackmyscrap.dart';
 
-class HomePage extends StatelessWidget {
+class HomePage extends StatefulWidget {
   const HomePage({super.key});
+
+  @override
+  State<HomePage> createState() => _HomePageState();
+}
+
+class _HomePageState extends State<HomePage> {
+  String? name = "";
+  @override
+  void initState() {
+    _getname();
+    super.initState();
+  }
+
+  _getname() async {
+    name = await PrefManager.getUserId();
+    setState(() {});
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Scrap Sell & Buy'),
+        actions: [
+          Padding(
+            padding: const EdgeInsets.all(18.0),
+            child: InkWell(
+              child: const Icon(Icons.logout),
+              onTap: () async {
+                Navigator.of(context).pushAndRemoveUntil(
+                    MaterialPageRoute(
+                        builder: (context) => const LoginScreen()),
+                    (Route<dynamic> route) => false);
+                await PrefManager.clearToken();
+              },
+            ),
+          )
+        ],
       ),
       body: SingleChildScrollView(
         child: Padding(
@@ -17,9 +51,9 @@ class HomePage extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
-              const Text(
-                'Welcome to Scrap Sell & Buy',
-                style: TextStyle(
+              Text(
+                'Welcome $name',
+                style: const TextStyle(
                   fontSize: 24,
                   fontWeight: FontWeight.bold,
                 ),
@@ -43,7 +77,7 @@ class HomePage extends StatelessWidget {
                   Navigator.push(
                     context,
                     MaterialPageRoute(
-                      builder: (context) => ScrapTrackerPage(),
+                      builder: (context) => const ScrapTrackerPage(),
                     ),
                   );
                 },

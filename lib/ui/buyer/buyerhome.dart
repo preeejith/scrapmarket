@@ -1,14 +1,48 @@
 import 'package:flutter/material.dart';
+import 'package:scrap_market/loginscreen.dart';
+import 'package:scrap_market/prefmanager/prefmanager.dart';
 import 'package:scrap_market/ui/buyer/buyscrappage.dart';
 
-class BuyerHomePage extends StatelessWidget {
+class BuyerHomePage extends StatefulWidget {
   const BuyerHomePage({super.key});
+
+  @override
+  State<BuyerHomePage> createState() => _BuyerHomePageState();
+}
+
+class _BuyerHomePageState extends State<BuyerHomePage> {
+  String? name = "";
+  @override
+  void initState() {
+    _getname();
+    super.initState();
+  }
+
+  _getname() async {
+    name = await PrefManager.getUserId();
+    setState(() {});
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Scrap  Buy'),
+        actions: [
+          Padding(
+            padding: const EdgeInsets.all(18.0),
+            child: InkWell(
+              child: const Icon(Icons.logout),
+              onTap: () async {
+                Navigator.of(context).pushAndRemoveUntil(
+                    MaterialPageRoute(
+                        builder: (context) => const LoginScreen()),
+                    (Route<dynamic> route) => false);
+                await PrefManager.clearToken();
+              },
+            ),
+          )
+        ],
       ),
       body: SingleChildScrollView(
         child: Padding(
@@ -16,9 +50,9 @@ class BuyerHomePage extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
-              const Text(
-                'Welcome to Scrap Buy',
-                style: TextStyle(
+              Text(
+                'Welcome $name',
+                style: const TextStyle(
                   fontSize: 24,
                   fontWeight: FontWeight.bold,
                 ),

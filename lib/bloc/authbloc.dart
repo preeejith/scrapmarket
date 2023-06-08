@@ -2,7 +2,9 @@ import 'dart:async';
 
 import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:scrap_market/models/commonbloc.dart';
+import 'package:scrap_market/models/loginmodel.dart';
 import 'package:scrap_market/prefmanager/prefmanager.dart';
 import 'package:scrap_market/repositories/repository.dart';
 
@@ -10,32 +12,59 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
   String? dsvm;
   LoginBloc() : super(LoginState()) {
     on<GetLoginEvent>(_getLoginEvent);
+
+    on<GetUserRegistrationEvent>(_getUserRegistrationEvent);
     on<GetLogoutEvent>(_getLogoutEvent);
   }
   Future<FutureOr<void>> _getLoginEvent(
       GetLoginEvent event, Emitter<LoginState> emit) async {
     emit(Requesting());
-    CommonModel loginModel = CommonModel();
+    LoginModel loginModel;
     Map data = {
-      "phone": event.phone,
+      "userName": event.email,
       "password": event.password,
     };
-    var url = '/user/login';
+    var url = '/login';
     loginModel = await Repository().checkPhoneNumber(url: url, data: data);
     if (loginModel.status == true) {
-      // await PrefManager.setIsLoggedIn(true);
-      // await PrefManager.setToken(loginModel.token.toString());
-      // await PrefManager.setRole(loginModel.role.toString());
-      // await PrefManager.setUserId(loginModel.id.toString());
-      // if (loginModel.role == "Admin") {
-      //   emit(AdminLoginSuccess(loginModel: loginModel));
-      // } else if (loginModel.role == "Client") {
-      //   emit(ClientLoginSuccess(loginModel: loginModel));
-      // } else if (loginModel.role == "Worker") {
-      //   emit(EmployeeLoginSuccess(loginModel: loginModel));
-      // } else {}
+      await PrefManager.setToken(loginModel.token);
+      await PrefManager.setRole(loginModel.role);
+      await PrefManager.setUserId(loginModel.userName);
+      emit(LoginSuccess(loginModel: loginModel));
     } else {
       emit(LoginError(error: loginModel.msg.toString()));
+    }
+  }
+
+  Future<FutureOr<void>> _getUserRegistrationEvent(
+      GetUserRegistrationEvent event, Emitter<LoginState> emit) async {
+    String url;
+    emit(UserRegistering());
+    CommonModel commonModel = CommonModel();
+    Map data = {
+      "name": event.name,
+      "phone": event.phone,
+      "email": event.email,
+      "password": event.password,
+      "district": event.district,
+      "town": event.town,
+      "street": event.street,
+      "buildingNo": event.buildingNo,
+      "houseNo": event.houseNo,
+      "landmark": event.landmark,
+      "pincode": event.pincode,
+      "place": event.town,
+      "orgaisation": event.orgaisation
+    };
+    event.isuser == true
+        ? url = '/user/registration'
+        : url = '/buyer/registration';
+    commonModel = await Repository().userreg(url: url, data: data);
+    if (commonModel.status == true) {
+      emit(RegUserSucces(error: commonModel.msg.toString()));
+    } else {
+      Fluttertoast.showToast(msg: commonModel.msg.toString());
+      emit(UserRegError(error: commonModel.msg.toString()));
     }
   }
 
@@ -64,15 +93,47 @@ class LoginEvent extends Equatable {
 }
 
 class GetLoginEvent extends LoginEvent {
-  final String? password, count;
-  final String? phone;
-  GetLoginEvent({this.count, this.password, this.phone});
+  final String? password;
+  final String? email;
+  GetLoginEvent({this.password, this.email});
 }
 
 class GetLogoutEvent extends LoginEvent {
   final String? password, count;
   final String? phone;
   GetLogoutEvent({this.count, this.password, this.phone});
+}
+
+class GetUserRegistrationEvent extends LoginEvent {
+  final bool? isuser;
+  final String? name, phone;
+  final String? email,
+      password,
+      district,
+      town,
+      street,
+      buildingNo,
+      houseNo,
+      landmark,
+      pincode,
+      place,
+      orgaisation;
+  GetUserRegistrationEvent({
+    this.name,
+    this.isuser,
+    this.phone,
+    this.orgaisation,
+    this.email,
+    this.password,
+    this.district,
+    this.town,
+    this.street,
+    this.buildingNo,
+    this.houseNo,
+    this.landmark,
+    this.pincode,
+    this.place,
+  });
 }
 
 class LoginState extends Equatable {
@@ -82,10 +143,12 @@ class LoginState extends Equatable {
 
 class Requesting extends LoginState {}
 
+class UserRegistering extends LoginState {}
+
 class Loggingout extends LoginState {}
 
 class LoginSuccess extends LoginState {
-  final CommonModel loginModel;
+  final LoginModel loginModel;
   LoginSuccess({required this.loginModel});
 }
 
@@ -112,6 +175,16 @@ class ClientLoginSuccess extends LoginState {
 class LoginError extends LoginState {
   final String error;
   LoginError({required this.error});
+}
+
+class UserRegError extends LoginState {
+  final String error;
+  UserRegError({required this.error});
+}
+
+class RegUserSucces extends LoginState {
+  final String error;
+  RegUserSucces({required this.error});
 }
 
 class LogoutError extends LoginState {

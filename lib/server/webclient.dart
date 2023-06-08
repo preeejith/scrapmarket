@@ -7,7 +7,7 @@ import 'package:scrap_market/prefmanager/prefmanager.dart';
 class WebClient {
   // static const baseUrl = "http://192.168.54.155:5200";
 /////
-  static const baseUrl = "http://apicerp.leopardtechlabs.in";
+  static const baseUrl = "http://192.168.52.136:4000";
 
   static const imageUrl = "http://apicerp.leopardtechlabs.in/file/get/";
 

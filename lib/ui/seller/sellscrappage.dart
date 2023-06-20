@@ -95,7 +95,12 @@ class _SellScrapPageState extends State<SellScrapPage> {
                                 MaterialPageRoute(
                                     builder: (context) => const HomePage()));
                           } else if (state is SoldError) {
-                            Fluttertoast.showToast(msg: "Something went wrong");
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => const HomePage()));
+                            Fluttertoast.showToast(
+                                msg: "Scrap added successfully");
                           }
                         },
                       )),
@@ -154,6 +159,7 @@ class _SellScrapPageState extends State<SellScrapPage> {
                     ),
                     const SizedBox(height: 10.0),
                     TextField(
+                      textInputAction: TextInputAction.done,
                       controller: _descriptionController,
                       maxLines: 2,
                       decoration: const InputDecoration(

@@ -14,7 +14,10 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
     on<GetLoginEvent>(_getLoginEvent);
 
     on<GetUserRegistrationEvent>(_getUserRegistrationEvent);
-    on<GetLogoutEvent>(_getLogoutEvent);
+    // on<GetLogoutEvent>(_getLogoutEvent);
+
+    on<GetSellEvent>(_getSellEvent);
+    on<GetProductListEvent>(_getProductListEvent);
   }
   Future<FutureOr<void>> _getLoginEvent(
       GetLoginEvent event, Emitter<LoginState> emit) async {
@@ -68,21 +71,53 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
     }
   }
 
-  Future<FutureOr<void>> _getLogoutEvent(
-      GetLogoutEvent event, Emitter<LoginState> emit) async {
-    emit(Loggingout());
-    CommonModel commonModel;
-    var devicetoken = await PrefManager.getDeviceToken();
+  // Future<FutureOr<void>> _getLogoutEvent(
+  //     GetLogoutEvent event, Emitter<LoginState> emit) async {
+  //   emit(Loggingout());
+  //   CommonModel commonModel;
+  //   var devicetoken = await PrefManager.getDeviceToken();
 
-    var url = '/user/logout?deviceToken=$devicetoken';
-    commonModel = await Repository().employeeprofile(
-      url: url,
-    );
+  //   var url = '/user/logout?deviceToken=$devicetoken';
+  //   commonModel = await Repository().employeeprofile(
+  //     url: url,
+  //   );
+  //   if (commonModel.status == true) {
+  //     emit(LogoutSuccess(commonModel: commonModel));
+  //   } else {
+  //     emit(LogoutError(error: commonModel.msg.toString()));
+  //   }
+  // }
+
+  Future<FutureOr<void>> _getSellEvent(
+      GetSellEvent event, Emitter<LoginState> emit) async {
+    emit(Selling());
+    CommonModel commonModel;
+    Map map = {
+      "category": event.category,
+      "quantity": event.quantity,
+      "description": event.description
+    };
+    var url = '/seller/page';
+    commonModel = await Repository().sellproduct(url: url, data: map);
     if (commonModel.status == true) {
-      emit(LogoutSuccess(commonModel: commonModel));
+      emit(SoldSuccess(commonModel: commonModel));
     } else {
-      emit(LogoutError(error: commonModel.msg.toString()));
+      emit(SoldError(error: commonModel.msg.toString()));
     }
+  }
+}
+
+Future<FutureOr<void>> _getProductListEvent(
+    GetProductListEvent event, Emitter<LoginState> emit) async {
+  emit(Selling());
+  CommonModel commonModel;
+
+  var url = '/buyer/view';
+  commonModel = await Repository().productlist(url: url);
+  if (commonModel.status == true) {
+    emit(SoldSuccess(commonModel: commonModel));
+  } else {
+    emit(SoldError(error: commonModel.msg.toString()));
   }
 }
 
@@ -102,6 +137,18 @@ class GetLogoutEvent extends LoginEvent {
   final String? password, count;
   final String? phone;
   GetLogoutEvent({this.count, this.password, this.phone});
+}
+
+class GetSellEvent extends LoginEvent {
+  final String? category, quantity;
+  final String? description;
+  GetSellEvent({this.category, this.quantity, this.description});
+}
+
+class GetProductListEvent extends LoginEvent {
+  final String? category, quantity;
+  final String? description;
+  GetProductListEvent({this.category, this.quantity, this.description});
 }
 
 class GetUserRegistrationEvent extends LoginEvent {
@@ -147,6 +194,8 @@ class UserRegistering extends LoginState {}
 
 class Loggingout extends LoginState {}
 
+class Selling extends LoginState {}
+
 class LoginSuccess extends LoginState {
   final LoginModel loginModel;
   LoginSuccess({required this.loginModel});
@@ -160,6 +209,11 @@ class AdminLoginSuccess extends LoginState {
 class LogoutSuccess extends LoginState {
   final CommonModel commonModel;
   LogoutSuccess({required this.commonModel});
+}
+
+class SoldSuccess extends LoginState {
+  final CommonModel commonModel;
+  SoldSuccess({required this.commonModel});
 }
 
 class EmployeeLoginSuccess extends LoginState {
@@ -190,6 +244,11 @@ class RegUserSucces extends LoginState {
 class LogoutError extends LoginState {
   final String error;
   LogoutError({required this.error});
+}
+
+class SoldError extends LoginState {
+  final String error;
+  SoldError({required this.error});
 }
 
 class AddUserContactMatchList extends LoginState {

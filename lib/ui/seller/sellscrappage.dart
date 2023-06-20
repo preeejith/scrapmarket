@@ -1,6 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:geolocator/geolocator.dart';
+import 'package:scrap_market/homescreen.dart';
 import 'package:scrap_market/models/scrapmodel.dart';
+
+import '../../bloc/authbloc.dart';
 
 class SellScrapPage extends StatefulWidget {
   const SellScrapPage({super.key});
@@ -17,7 +22,7 @@ class _SellScrapPageState extends State<SellScrapPage> {
   final TextEditingController _descriptionController = TextEditingController();
 
   final List<ScrapModel> _scraplist = [];
-
+  final List<String> _scraplist2 = [];
   final List<String> _categories = [
     'Metal',
     'Plastic',
@@ -68,18 +73,45 @@ class _SellScrapPageState extends State<SellScrapPage> {
                   // const SizedBox(height: 20.0),
                   // location(),
                   // const SizedBox(height: 20.0),
+
                   ElevatedButton(
-                    onPressed: () {
-                      // Add functionality to submit scrap details
-                      submitScrap();
-                    },
-                    child: const Text('Submit'),
-                  ),
+                      onPressed: () {
+                        // Add functionality to submit scrap details
+                        submitScrap(context);
+                      },
+                      child: BlocConsumer<LoginBloc, LoginState>(
+                        builder: (context, state) {
+                          if (state is Selling) {
+                            return const Center(
+                                child: CircularProgressIndicator());
+                          } else {
+                            return const Text('Submit');
+                          }
+                        },
+                        listener: (context, state) {
+                          if (state is SoldSuccess) {
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => const HomePage()));
+                          } else if (state is SoldError) {
+                            Fluttertoast.showToast(msg: "Something went wrong");
+                          }
+                        },
+                      )),
                 ],
               ),
             ),
       body: _currentPosition == null
-          ? const Center(child: CircularProgressIndicator())
+          ? const Center(
+              child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                CircularProgressIndicator(),
+                Text("Location Fetching..")
+              ],
+            ))
           : SingleChildScrollView(
               child: Padding(
                 padding: const EdgeInsets.all(20.0),
@@ -287,8 +319,26 @@ class _SellScrapPageState extends State<SellScrapPage> {
     );
   }
 
-  void submitScrap() {
-    // Perform scrap submission logic here
+  Future<void> submitScrap(BuildContext context) async {
+    if (_scraplist.isEmpty) {
+      Fluttertoast.showToast(msg: "Please enter the items");
+    } else {
+      // _scraplist2.add(_scraplist[0].category.toString());
+
+      // _scraplist2.add(_scraplist[0].quantity.toString());
+      // _scraplist2.add(_scraplist[0].description.toString());
+
+      // if (_scraplist2.isEmpty) {
+      //   await PrefManager.setIsProductdata(_scraplist2);
+      // }
+
+      BlocProvider.of<LoginBloc>(context).add(GetSellEvent(
+        category: _scraplist.isEmpty ? "" : _scraplist[0].category,
+        quantity: _scraplist.isEmpty ? "" : _scraplist[0].quantity,
+        description: _scraplist.isEmpty ? "" : _scraplist[0].description,
+      ));
+    }
+
     print(_scraplist);
   }
 

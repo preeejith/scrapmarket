@@ -25,6 +25,16 @@ class PrefManager {
     }
   }
 
+  static setIsProductdata(List<String> scraplist) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    await prefs.setStringList('scraplist', scraplist);
+  }
+
+  static getIsProductdata() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    return prefs.getStringList('scraplist');
+  }
+
   static setUserId(var userId) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     await prefs.setString('userId', userId);

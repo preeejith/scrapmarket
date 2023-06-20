@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:scrap_market/prefmanager/prefmanager.dart';
 import 'package:scrap_market/ui/buyer/scrapdetailed.dart';
 
 class BuyScrapPage extends StatefulWidget {
@@ -9,6 +10,7 @@ class BuyScrapPage extends StatefulWidget {
 }
 
 class _BuyScrapPageState extends State<BuyScrapPage> {
+  List<String>? scraplist;
   final List<String> _sellers = [
     'Seller 1',
     'Seller 2',
@@ -16,6 +18,16 @@ class _BuyScrapPageState extends State<BuyScrapPage> {
     'Seller 4',
     'Seller 5',
   ];
+  @override
+  void initState() {
+    _getdata();
+    super.initState();
+  }
+
+  _getdata() async {
+    scraplist = await PrefManager.getIsProductdata();
+    print(scraplist);
+  }
 
   @override
   Widget build(BuildContext context) {

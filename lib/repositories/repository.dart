@@ -21,8 +21,23 @@ class Repository {
     final LoginModel userModel = LoginModel.fromJson(response);
     return userModel;
   }
+  Future<CommonModel> sellproduct(
+      {required String url, dynamic data}) async {
+    var connectivityResult = await (Connectivity().checkConnectivity());
+    if (connectivityResult == ConnectivityResult.none) {
+      Fluttertoast.showToast(
+        msg: "No internet connection",
+        toastLength: Toast.LENGTH_SHORT,
+        gravity: ToastGravity.CENTER,
+      );
+    }
+    final dynamic response = await WebClient.post(url, data);
+    final CommonModel userModel = CommonModel.fromJson(response);
+    return userModel;
+  }
 
-  Future<CommonModel> employeeprofile({required String url}) async {
+
+  Future<CommonModel> productlist({required String url}) async {
     var connectivityResult = await (Connectivity().checkConnectivity());
     if (connectivityResult == ConnectivityResult.none) {
       Fluttertoast.showToast(

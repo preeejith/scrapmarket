@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:scrap_market/homescreen.dart';
+import 'package:scrap_market/server/webclient.dart';
 import 'package:scrap_market/ui/buyer/buyerhome.dart';
-import 'package:scrap_market/ui/buyerregistration.dart';
 import 'package:scrap_market/ui/sellerregistration.dart';
 
 import 'bloc/authbloc.dart';
@@ -16,6 +16,13 @@ class LoginScreen extends StatefulWidget {
 }
 
 class _LoginScreenState extends State<LoginScreen> {
+  List<String> mails = [];
+  @override
+  void initState() {
+    mails.add("prejithts102@gmail.com");
+    super.initState();
+  }
+
   final TextEditingController email = TextEditingController();
   final TextEditingController password = TextEditingController();
   @override
@@ -126,12 +133,19 @@ class _LoginScreenState extends State<LoginScreen> {
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: [
                     ElevatedButton(
-                      onPressed: () {
-                        Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) =>
-                                    const BuyerRegistration()));
+                      onPressed: () async {
+                        Map data = {
+                          "email": mails,
+                        };
+
+                        final dynamic response = await WebClient.post(
+                            "email/send/notification/htmlcontent", data);
+
+                        // Navigator.push(
+                        //     context,
+                        //     MaterialPageRoute(
+                        //         builder: (context) =>
+                        //             const BuyerRegistration()));
                       },
                       child: const Text('Register as Buyer'),
                     ),

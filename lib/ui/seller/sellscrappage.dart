@@ -22,7 +22,7 @@ class _SellScrapPageState extends State<SellScrapPage> {
   final TextEditingController _descriptionController = TextEditingController();
 
   final List<ScrapModel> _scraplist = [];
-  final List<String> _scraplist2 = [];
+
   final List<String> _categories = [
     'Metal',
     'Plastic',
@@ -339,6 +339,7 @@ class _SellScrapPageState extends State<SellScrapPage> {
       // }
 
       BlocProvider.of<LoginBloc>(context).add(GetSellEvent(
+        scraplist: _scraplist,
         category: _scraplist.isEmpty ? "" : _scraplist[0].category,
         quantity: _scraplist.isEmpty ? "" : _scraplist[0].quantity,
         description: _scraplist.isEmpty ? "" : _scraplist[0].description,
@@ -353,9 +354,14 @@ class _SellScrapPageState extends State<SellScrapPage> {
     String quantity = _quantityController.text.toString();
     double.parse(_quantityController.text);
     String description = _descriptionController.text;
-
+    double latt = double.parse(_currentPosition!.latitude.toString());
+    double lonn = double.parse(_currentPosition!.longitude.toString());
     ScrapModel newProduct = ScrapModel(
-        category: category, description: description, quantity: quantity);
+        category: category,
+        description: description,
+        quantity: quantity,
+        lat: latt,
+        lon: lonn);
 
     setState(() {
       _scraplist.add(newProduct);

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:geocoding/geocoding.dart';
 import 'package:scrap_market/prefmanager/prefmanager.dart';
 import 'package:scrap_market/ui/buyer/scrapdetailed.dart';
 
@@ -33,8 +34,8 @@ class _BuyScrapPageState extends State<BuyScrapPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Buy Scrap'),
-      ),
+          // title: const Text('Buy Scrap'),
+          ),
       body: Padding(
         padding: const EdgeInsets.all(20.0),
         child: Column(

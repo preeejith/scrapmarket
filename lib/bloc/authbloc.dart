@@ -5,11 +5,14 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:scrap_market/models/commonbloc.dart';
 import 'package:scrap_market/models/loginmodel.dart';
+import 'package:scrap_market/models/scrapmodel.dart';
 import 'package:scrap_market/prefmanager/prefmanager.dart';
 import 'package:scrap_market/repositories/repository.dart';
 
 class LoginBloc extends Bloc<LoginEvent, LoginState> {
   String? dsvm;
+
+  List<ScrapModel>? scraplist2 = [];
   LoginBloc() : super(LoginState()) {
     on<GetLoginEvent>(_getLoginEvent);
 
@@ -92,6 +95,7 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
       GetSellEvent event, Emitter<LoginState> emit) async {
     emit(Selling());
     CommonModel commonModel;
+    scraplist2 = event.scraplist;
     Map map = {
       "category": event.category,
       "quantity": event.quantity,
@@ -105,19 +109,20 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
       emit(SoldError(error: commonModel.msg.toString()));
     }
   }
-}
 
-Future<FutureOr<void>> _getProductListEvent(
-    GetProductListEvent event, Emitter<LoginState> emit) async {
-  emit(Selling());
-  CommonModel commonModel;
+  Future<FutureOr<void>> _getProductListEvent(
+      GetProductListEvent event, Emitter<LoginState> emit) async {
+    emit(Selling());
 
-  var url = '/buyer/view';
-  commonModel = await Repository().productlist(url: url);
-  if (commonModel.status == true) {
-    emit(SoldSuccess(commonModel: commonModel));
-  } else {
-    emit(SoldError(error: commonModel.msg.toString()));
+    CommonModel commonModel;
+
+    var url = '/buyer/view';
+    commonModel = await Repository().productlist(url: url);
+    if (commonModel.status == true) {
+      emit(SoldSuccess(commonModel: commonModel));
+    } else {
+      emit(SoldError(error: commonModel.msg.toString()));
+    }
   }
 }
 
@@ -140,15 +145,19 @@ class GetLogoutEvent extends LoginEvent {
 }
 
 class GetSellEvent extends LoginEvent {
+  final List<ScrapModel>? scraplist;
   final String? category, quantity;
   final String? description;
-  GetSellEvent({this.category, this.quantity, this.description});
+  GetSellEvent(
+      {this.category, this.scraplist, this.quantity, this.description});
 }
 
 class GetProductListEvent extends LoginEvent {
+  final List<ScrapModel>? scraplist;
   final String? category, quantity;
   final String? description;
-  GetProductListEvent({this.category, this.quantity, this.description});
+  GetProductListEvent(
+      {this.scraplist, this.category, this.quantity, this.description});
 }
 
 class GetUserRegistrationEvent extends LoginEvent {
